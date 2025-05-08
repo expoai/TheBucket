@@ -35,6 +35,11 @@ services:
       context: ./bucket
     container_name: bucket
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${SPRING_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     ports:
       - "${SPRING_PORT}:${SPRING_PORT}"
     env_file:
