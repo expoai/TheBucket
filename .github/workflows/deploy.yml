@@ -1,0 +1,26 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ prod ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ubuntu
+        key: ${{ secrets.VPS_DEPLOY_KEY }}
+        script: |
+          cd /home/ubuntu/TheBucket
+          git fetch origin
+          git reset --hard origin/prod
+          docker compose down
+          docker compose up -d --build
