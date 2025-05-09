@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class LoginController {
@@ -30,16 +31,18 @@ public class LoginController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDto) {
         try {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password());
             Authentication authentication = authenticationManager.authenticate(authToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            System.out.println("My Work Is this");
+
             // Gather the infos on user
-            String userName = loginDto.getUsername();
-            User user = userService.getUser(loginDto.getUsername());
+            String userName = loginDto.username();
+            User user = userService.getUser(loginDto.username());
 
             List<String> roles = userService.getUserRoles(user);
 
@@ -48,8 +51,6 @@ public class LoginController {
 
             return ResponseEntity.ok(new AuthResponseDTO(token, userName));
         } catch (AuthenticationException e) {
-
-
             return ResponseEntity.badRequest().body("Invalid username or password");
         }
     }

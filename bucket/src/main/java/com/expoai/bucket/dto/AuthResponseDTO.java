@@ -5,11 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class AuthResponseDTO {
-    private String token;
-    private String username;
+public record AuthResponseDTO(String token, String username) {
 }

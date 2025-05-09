@@ -1,5 +1,6 @@
 package com.expoai.bucket.config;
 
+import com.expoai.bucket.repository.ApiTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,11 +39,11 @@ public class SecurityConfiguration {
         return new JwtAuthenticationEntryPoint();
     }
 
-    // Filtre d'authentification JWT pour les requêtes
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
+
 
     // Configuration CORS pour autoriser des origines spécifiques
     @Bean
@@ -66,21 +67,24 @@ public class SecurityConfiguration {
 
     // Configuration de la chaîne de filtres de sécurité
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           ApiKeyAuthFilter apiKeyAuthFilter,
+                                           JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Désactivation de CSRF, nécésaire pour JWT
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Application de la config CORS
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Accès admin
-                        .requestMatchers("/user/**").hasRole("USER") // Accès étudiant
-                        .requestMatchers("/tester/**").hasRole("TESTER") // Accès enseignant
-                        // Accès public a certaines routes, notamment la page d'accueil, l'inscription et le login
-                        .requestMatchers("/", "/index", "/test", "/test/*", "/api/users/register", "/api/login").permitAll()
-                        .anyRequest().authenticated() // Toutes les autres requêtes nécessitent une authentification
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/**", "/api-token").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/api/**").hasRole("API")
+                        .requestMatchers("/setup/*", "/login").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Ajout du filtre JWT, permettant de vérifier le token et le rôle de l'utilisateur
+                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class) // 🔐 API keys first
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 🪪 JWT fallback
 
         return http.build();
     }
+
 }
 
