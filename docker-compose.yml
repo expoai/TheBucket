@@ -11,6 +11,8 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - backend
+    ports:
+      - "127.0.0.1:5432:5432"
 
   minio:
     image: quay.io/minio/minio
@@ -32,7 +34,7 @@ services:
     build:
       context: ./bucket
     container_name: bucket
-    restart: unless-stopped
+    restart: "no"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 10s

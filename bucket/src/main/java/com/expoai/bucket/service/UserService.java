@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,19 +34,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User getUserByToken(String token) {
-        User user = userRepository.findByClaimToken(token);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        } else if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
-            throw new UsernameNotFoundException("Token expired");
-        } else if (user.isEnabled()) {
-            throw new UsernameNotFoundException("User already enabled");
-        }
-
-        return user;
-    }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -53,7 +41,7 @@ public class UserService {
 
     public List<String> getUserRoles(String username) {
         User user = getUser(username);
-        return getUserRoles(user);
+        return getUserRoles(String.valueOf(user));
     }
 
     public List<String> getUserRoles(User user) {
@@ -67,6 +55,4 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-
 }
-
