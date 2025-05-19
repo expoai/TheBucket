@@ -1,8 +1,7 @@
 package com.expoai.bucket.controller;
 
 import com.expoai.bucket.dto.ApiTokenAttributionDTO;
-import com.expoai.bucket.entity.ApiToken;
-import com.expoai.bucket.entity.User;
+import com.expoai.bucket.enums.TokenType;
 import com.expoai.bucket.service.ApiTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ public class ApiTokenController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
         }
 
-        ApiTokenAttributionDTO apiAttributionDTO = ApiTokenAttributionDTO.builder().token(apiTokenService.getApiToken(user.getUsername())).build()  ;
+        ApiTokenAttributionDTO apiAttributionDTO = ApiTokenAttributionDTO.builder().token(apiTokenService.getApiToken(user.getUsername(), TokenType.API)).build()  ;
 
         return ResponseEntity.ok(apiAttributionDTO);
     }

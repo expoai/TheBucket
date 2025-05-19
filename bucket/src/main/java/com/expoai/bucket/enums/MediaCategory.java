@@ -9,7 +9,11 @@ import java.util.Optional;
 public enum MediaCategory {
     IMAGE("images", List.of("image/png", "image/jpeg", "image/webp")),
     AUDIO("audio", List.of("audio/mpeg", "audio/wav", "audio/x-wav")),
-    JSON("json", List.of("application/json"));
+    JSON("json", List.of("application/json")),
+    PDF("pdfs", List.of("application/pdf"))
+
+    ;
+
 
     @Getter
     private final String prefix;

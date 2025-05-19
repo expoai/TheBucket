@@ -1,9 +1,7 @@
 package com.expoai.bucket.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import com.expoai.bucket.enums.TokenType;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -23,6 +21,9 @@ public class ApiToken {
     private Long id;
 
     private String token;
+
+    @Enumerated(EnumType.STRING)
+    private TokenType type;
 
     private boolean revoked = false;
 

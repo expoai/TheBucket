@@ -12,7 +12,7 @@ services:
     networks:
       - backend
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${POSTGRES_PORT}:${POSTGRES_PORT}"
 
   minio:
     image: quay.io/minio/minio
@@ -57,7 +57,9 @@ services:
 
       MINIO_PUBLIC_BUCKET: ${MINIO_PUBLIC_BUCKET}
       MINIO_PRIVATE_BUCKET: ${MINIO_PRIVATE_BUCKET}
+      MINIO_STUDENT_BUCKET: ${MINIO_STUDENT_BUCKET}
       MINIO_PUBLIC_BASE_URL: ${MINIO_PUBLIC_BASE_URL}
+
     depends_on:
       - postgres
       - minio
