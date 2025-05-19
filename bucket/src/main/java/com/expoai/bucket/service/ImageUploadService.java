@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ApiImageService {
+public class ImageUploadService {
 
     private final MinioClient minioClient;
     private final UploadedImageRepository uploadedImageRepository;
@@ -28,7 +28,7 @@ public class ApiImageService {
     @Value("${minio.private-bucket}")
     private String privateBucket;
 
-    @Value("${minio.public-base-url}") // e.g. https://yourdomain.com/public-media/
+    @Value("${minio.public-base-url}")
     private String publicBaseUrl;
 
     public String handleUpload(MultipartFile file, Visibility visibility) throws Exception {
@@ -57,7 +57,7 @@ public class ApiImageService {
         image.setVisibility(visibility);
 
         if (visibility == Visibility.PUBLIC) {
-            String cleanBase = publicBaseUrl.endsWith("/") ? publicBaseUrl : publicBaseUrl + "/";
+            String cleanBase = publicBaseUrl + publicBucket + "/";
             image.setPublicUrl(cleanBase + objectName);
         }
 

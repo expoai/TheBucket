@@ -2,6 +2,7 @@ package com.expoai.bucket.service;
 
 import com.expoai.bucket.entity.ApiToken;
 import com.expoai.bucket.entity.User;
+import com.expoai.bucket.enums.TokenType;
 import com.expoai.bucket.repository.ApiTokenRepository;
 import com.expoai.bucket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class ApiTokenService {
     private final ApiTokenRepository tokenRepo;
     private final UserRepository userRepo;
 
-    public String getApiToken(String username) {
+    public String getApiToken(String username, TokenType tokenType) {
 
         User user = userRepo.findByUsername(username);
 
@@ -26,6 +27,7 @@ public class ApiTokenService {
         ApiToken apiToken = new ApiToken();
         apiToken.setUser(user);
         apiToken.setToken(token);
+        apiToken.setType(tokenType);
 
         tokenRepo.save(apiToken);
         return token ;

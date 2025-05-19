@@ -1,7 +1,7 @@
 package com.expoai.bucket.controller;
 
 import com.expoai.bucket.enums.Visibility;
-import com.expoai.bucket.service.ApiImageService;
+import com.expoai.bucket.service.ImageUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ApiImageController {
 
-    @GetMapping("/test")
-    public String getTest() {
-        return "Yep, that worked" ;
-    }
-
-    private final ApiImageService imageUploadService;
+    private final ImageUploadService imageUploadService;
 
     @PostMapping("/upload")
     public ResponseEntity<String> upload(
@@ -33,7 +28,6 @@ public class ApiImageController {
                     .body("Upload failed: " + e.getMessage());
         }
     }
-
 
 
 }
