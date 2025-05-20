@@ -1,24 +1,25 @@
 package com.expoai.bucket.service;
 
-import com.expoai.bucket.dto.StudentUploadDTO;
+import com.expoai.bucket.dto.*;
 import com.expoai.bucket.entity.StudentUpload;
-import com.expoai.bucket.entity.UploadedImage;
 import com.expoai.bucket.entity.User;
 import com.expoai.bucket.enums.MediaCategory;
-import com.expoai.bucket.enums.Visibility;
+import com.expoai.bucket.mapper.StudentUploadMapper;
 import com.expoai.bucket.repository.StudentUploadRepository;
 import com.expoai.bucket.repository.UserRepository;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,8 +35,9 @@ public class StudentUploadService {
     private final MinioClient minioClient;
     private final StudentUploadRepository studentUploadRepository;
     private final UserRepository userRepository ;
+    private final StudentUploadMapper studentUploadMapper ;
 
-    public StudentUpload save(UserDetails userdetails, StudentUploadDTO upload) throws Exception {
+    public StudentUploadReadMetadataDTO save(UserDetails userdetails, StudentUploadWritingDTO upload) throws Exception {
 
         User user = userRepository.findByUsername(userdetails.getUsername()); ;
         String sharedUrl = handleUpload(upload.file()) ;
@@ -50,47 +52,61 @@ public class StudentUploadService {
                 .url(sharedUrl)
                 .build();
 
-        return studentUploadRepository.save(studentUpload);
+        studentUploadRepository.save(studentUpload);
+        return studentUploadMapper.uploadToReadingDTO(studentUpload) ;
     }
 
-    /*
-    public Optional<StudentUpload> findByExternalId(Long externalID) {
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+    public Optional<StudentUploadReadMetadataDTO> findByExternalId(UserDetails teamDetails, Long externalID) {
+        User team = userRepository.findByUsername(teamDetails.getUsername()); ;
+        Optional<StudentUpload> uploadOpt = studentUploadRepository.findByTeamAndIdExterne(team, externalID);
 
-        return studentUploadRepository.findById(externalID);
+        return uploadOpt
+                .map(studentUploadMapper::uploadToReadingDTO);
     }
 
-    public StudentUpload update(Long id, StudentUpload updated) {
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+    public void delete(UserDetails teamDetails, Long externalID) throws Exception {
+        User team = userRepository.findByUsername(teamDetails.getUsername()); ;
 
-        return studentUploadRepository.findById(id).map(existing -> {
-            if (!existing.getOwner().getUsername().equals(currentUser)) {
-                throw new AccessDeniedException("You do not own this resource.");
-            }
+        Optional<StudentUpload> uploadOpt = studentUploadRepository.findByTeamAndIdExterne(team, externalID);
+        if(uploadOpt.isPresent()) {
+            StudentUpload upload = uploadOpt.get();
+            String url = upload.getUrl() ;
+            String baseUrl = publicBaseUrl + studentBucket ;
+            String path = url.replace(baseUrl, "");
+            int firstSlashIndex = path.indexOf('/');
+            String objectKey = path.substring(firstSlashIndex + 1);
 
-            existing.setIdExterne(updated.getIdExterne());
-            existing.setUrl(updated.getUrl());
-            existing.setTag1(updated.getTag1());
-            existing.setTag2(updated.getTag2());
-            existing.setTag3(updated.getTag3());
+            minioClient.removeObject(
+                    RemoveObjectArgs
+                    .builder()
+                    .bucket(studentBucket).object(objectKey)
+                    .build());
 
-            return studentUploadRepository.save(existing);
-        }).orElseThrow(() -> new NoSuchElementException("StudentUpload not found with ID " + id));
-    }
-
-    public void delete(Long id) throws AccessDeniedException {
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        StudentUpload upload = studentUploadRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("StudentUpload not found with ID " + id));
-
-        if (!upload.getOwner().getUsername().equals(currentUser)) {
-            throw new AccessDeniedException("You do not own this resource.");
+        } else {
+            throw new NoSuchElementException() ;
         }
-
-        studentUploadRepository.deleteById(id);
     }
-*/
+
+    public StudentUploadFindMetadataDTO findByTags(StudentPublicUploadFindDTO dto) {
+        return StudentUploadFindMetadataDTO(dto.groupID(),dto.tag1(),dto.tag2(),dto.tag3()) ;
+    }
+
+    public StudentUploadFindMetadataDTO findByTags(UserDetails teamDetails, StudentUploadFindDTO dto) {
+        User team = userRepository.findByUsername(teamDetails.getUsername()); ;
+        return StudentUploadFindMetadataDTO(team.getId(),dto.tag1(),dto.tag2(),dto.tag3()) ;
+    }
+
+    public StudentUploadFindMetadataDTO StudentUploadFindMetadataDTO(long teamID, String tag1,String tag2,String tag3) {
+        List<StudentUpload> uploads = studentUploadRepository.findByTags(tag1, tag2, tag3, teamID) ;
+
+        List<StudentUploadReadMetadataDTO> metadataDTOS = uploads
+                .stream()
+                .map(studentUploadMapper::uploadToReadingDTO)
+                .toList() ;
+
+        return new StudentUploadFindMetadataDTO(metadataDTOS) ;
+    }
+
     public String handleUpload(MultipartFile file) throws Exception {
         String contentType = file.getContentType();
 
@@ -114,4 +130,24 @@ public class StudentUploadService {
         return cleanBase + objectName;
     }
 
+
 }
+/*
+    public StudentUpload update(Long id, StudentUpload updated) {
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return studentUploadRepository.findById(id).map(existing -> {
+            if (!existing.getOwner().getUsername().equals(currentUser)) {
+                throw new AccessDeniedException("You do not own this resource.");
+            }
+
+            existing.setIdExterne(updated.getIdExterne());
+            existing.setUrl(updated.getUrl());
+            existing.setTag1(updated.getTag1());
+            existing.setTag2(updated.getTag2());
+            existing.setTag3(updated.getTag3());
+
+            return studentUploadRepository.save(existing);
+        }).orElseThrow(() -> new NoSuchElementException("StudentUpload not found with ID " + id));
+    }
+*/
