@@ -2,7 +2,7 @@ package com.expoai.bucket.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public record StudentUploadDTO (
+public record StudentUploadWritingDTO(
         MultipartFile file,
         Long idExterne,
         String tag1,

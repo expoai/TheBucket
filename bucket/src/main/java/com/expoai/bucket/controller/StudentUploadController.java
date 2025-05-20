@@ -1,16 +1,22 @@
 package com.expoai.bucket.controller;
 
-import com.expoai.bucket.dto.StudentUploadDTO;
-import com.expoai.bucket.entity.StudentUpload;
+import com.expoai.bucket.dto.StudentUploadFindDTO;
+import com.expoai.bucket.dto.StudentUploadFindMetadataDTO;
+import com.expoai.bucket.dto.StudentUploadReadMetadataDTO;
+import com.expoai.bucket.dto.StudentUploadWritingDTO;
 import com.expoai.bucket.service.StudentUploadService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/student/upload")
 public class StudentUploadController {
 
     private final StudentUploadService studentUploadService;
@@ -19,46 +25,47 @@ public class StudentUploadController {
         this.studentUploadService = studentUploadService;
     }
 
-    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<StudentUpload> create(
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> create(
             @AuthenticationPrincipal UserDetails user,
-            @ModelAttribute StudentUploadDTO dto
+            @ModelAttribute StudentUploadWritingDTO dto
     ) throws Exception {
+        try {
+            return ResponseEntity.ok(studentUploadService.save(user,dto));
+        } catch (DataIntegrityViolationException e) {
+                return ResponseEntity.badRequest()
+                        .body("Erreur : un item avec ce même idExterne existe déjà pour votre équipe.");
+        }
 
-        return ResponseEntity.ok(studentUploadService.save(user,dto));
     }
 
-    /*
-    @GetMapping("/{id}")
-    public ResponseEntity<StudentUpload> getByExternalId(@PathVariable Long externalID) {
+    @GetMapping("/{externalID}")
+    public ResponseEntity<StudentUploadReadMetadataDTO> getByExternalId(@AuthenticationPrincipal UserDetails user, @PathVariable Long externalID) {
         return studentUploadService
-                .findByExternalId(externalID)
-                .map(ResponseEntity.ok())
+                .findByExternalId(user, externalID)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<StudentUpload> update(@PathVariable Long id, @RequestBody StudentUpload updated) {
-        return ResponseEntity.ok(studentUploadService.update(id, updated));
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        studentUploadService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserDetails user, @PathVariable Long id) {
+        try{
+            studentUploadService.delete(user, id);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body("Aucun élément avec l'ID : " + id + " pour votre équipe");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur avec le bucket, veillez me contacter");
+        }
+
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<StudentUpload>> searchByTags(
-            @RequestParam(required = false) String tag1,
-            @RequestParam(required = false) String tag2,
-            @RequestParam(required = false) String tag3
+    public ResponseEntity<StudentUploadFindMetadataDTO> searchByTags(
+            @AuthenticationPrincipal UserDetails user,
+            @RequestBody StudentUploadFindDTO dto
     ) {
-        List<String> tags = Stream.of(tag1, tag2, tag3)
-                .filter(tag -> tag != null && !tag.isBlank())
-                .toList();
-
-        return ResponseEntity.ok(studentUploadService.findByTags(idStudent, tags));
+        return ResponseEntity.ok(studentUploadService.findByTags(user, dto));
     }
-    */
+
 }

@@ -78,7 +78,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/admin/**", "/api-token").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/api/**").hasRole("API")
-                        .requestMatchers("/setup/*", "/login").permitAll()
+                        .requestMatchers("/setup/*", "/login", "/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class) // API keys first
