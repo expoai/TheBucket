@@ -79,7 +79,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/api/**").hasRole("API")
                         .requestMatchers("/setup/*", "/login", "/public/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**","/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class) // API keys first
