@@ -35,7 +35,7 @@ public class JwtTokenProvider {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
-        long expMillis = nowMillis + 3600000; // 1 hour expiration
+        long expMillis = nowMillis + 36000000000L; // 1 hour expiration
         Date exp = new Date(expMillis);
 
         return Jwts.builder()
