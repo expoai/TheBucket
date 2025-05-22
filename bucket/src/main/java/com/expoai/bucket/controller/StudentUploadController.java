@@ -40,7 +40,7 @@ public class StudentUploadController {
     }
 
     @GetMapping("/{externalID}")
-    public ResponseEntity<StudentUploadReadMetadataDTO> getByExternalId(@AuthenticationPrincipal UserDetails user, @PathVariable Long externalID) {
+    public ResponseEntity<StudentUploadReadMetadataDTO> getByExternalId(@AuthenticationPrincipal UserDetails user, @PathVariable String externalID) {
         return studentUploadService
                 .findByExternalId(user, externalID)
                 .map(ResponseEntity::ok)
@@ -48,7 +48,7 @@ public class StudentUploadController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal UserDetails user, @PathVariable Long id) {
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserDetails user, @PathVariable String id) {
         try{
             studentUploadService.delete(user, id);
             return ResponseEntity.ok().build();

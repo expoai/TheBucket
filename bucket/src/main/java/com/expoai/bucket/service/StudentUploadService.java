@@ -56,7 +56,7 @@ public class StudentUploadService {
         return studentUploadMapper.uploadToReadingDTO(studentUpload) ;
     }
 
-    public Optional<StudentUploadReadMetadataDTO> findByExternalId(UserDetails teamDetails, Long externalID) {
+    public Optional<StudentUploadReadMetadataDTO> findByExternalId(UserDetails teamDetails, String externalID) {
         User team = userRepository.findByUsername(teamDetails.getUsername()); ;
         Optional<StudentUpload> uploadOpt = studentUploadRepository.findByTeamAndIdExterne(team, externalID);
 
@@ -64,7 +64,7 @@ public class StudentUploadService {
                 .map(studentUploadMapper::uploadToReadingDTO);
     }
 
-    public void delete(UserDetails teamDetails, Long externalID) throws Exception {
+    public void delete(UserDetails teamDetails, String externalID) throws Exception {
         User team = userRepository.findByUsername(teamDetails.getUsername()); ;
 
         Optional<StudentUpload> uploadOpt = studentUploadRepository.findByTeamAndIdExterne(team, externalID);
@@ -92,7 +92,7 @@ public class StudentUploadService {
     }
 
     public StudentUploadFindMetadataDTO findByTags(UserDetails teamDetails, StudentUploadFindDTO dto) {
-        User team = userRepository.findByUsername(teamDetails.getUsername()); ;
+        User team = userRepository.findByUsername(teamDetails.getUsername());
         return StudentUploadFindMetadataDTO(team.getId(),dto.tag1(),dto.tag2(),dto.tag3()) ;
     }
 
