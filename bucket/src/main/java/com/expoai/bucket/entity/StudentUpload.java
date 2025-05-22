@@ -16,7 +16,7 @@ public class StudentUpload {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idExterne;
+    private String idExterne;
 
     @OneToOne
     @JoinColumn(name = "team_id") // references User.id

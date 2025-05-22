@@ -6,7 +6,7 @@ import lombok.Builder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public record StudentUploadReadingPublicDTO(
-    Long idExterne,
+    String idExterne,
     Long idTeam,
     String url,
     String tag1,

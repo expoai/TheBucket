@@ -12,7 +12,7 @@ import java.util.Optional;
 @org.springframework.stereotype.Repository
 public interface StudentUploadRepository extends Repository<StudentUpload, Long> {
 
-    Optional<StudentUpload> findByTeamAndIdExterne(User user, Long aLong);
+    Optional<StudentUpload> findByTeamAndIdExterne(User user, String aLong);
 
     <S extends StudentUpload> S save(S entity);
 
