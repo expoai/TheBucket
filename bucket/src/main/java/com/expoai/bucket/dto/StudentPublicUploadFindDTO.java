@@ -1,5 +1,8 @@
 package com.expoai.bucket.dto;
 
+import lombok.Builder;
+
+@Builder
 public record StudentPublicUploadFindDTO(
         long groupID,
         String tag1,
