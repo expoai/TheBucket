@@ -7,6 +7,7 @@ public record StudentUploadWritingDTO(
         String idExterne,
         String tag1,
         String tag2,
-        String tag3
+        String tag3,
+        Boolean  generateThumbnail
 ){
 }

@@ -9,6 +9,7 @@ public record StudentUploadReadMetadataDTO(
     String idExterne,
     Long idTeam,
     String url,
+    String thumbnailUrl,
     String tag1,
     String tag2,
     String tag3

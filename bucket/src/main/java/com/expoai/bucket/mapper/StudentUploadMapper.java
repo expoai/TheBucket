@@ -14,6 +14,7 @@ public class StudentUploadMapper {
                 .builder()
                 .idExterne(upload.getIdExterne())
                 .url(upload.getUrl())
+                .thumbnailUrl(upload.getThumbnailUrl())
                 .tag1(upload.getTag1())
                 .tag2(upload.getTag2())
                 .tag3(upload.getTag3())

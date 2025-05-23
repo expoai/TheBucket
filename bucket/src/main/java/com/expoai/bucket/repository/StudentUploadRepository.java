@@ -12,9 +12,13 @@ import java.util.Optional;
 @org.springframework.stereotype.Repository
 public interface StudentUploadRepository extends Repository<StudentUpload, Long> {
 
+    List<StudentUpload> findByTeam(User user);
+
     Optional<StudentUpload> findByTeamAndIdExterne(User user, String aLong);
 
     <S extends StudentUpload> S save(S entity);
+
+    void delete(StudentUpload entity);
 
     @Query("""
         SELECT s FROM StudentUpload s

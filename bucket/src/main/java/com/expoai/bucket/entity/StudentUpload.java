@@ -23,6 +23,8 @@ public class StudentUpload {
     private User team ;
 
     private String url ;
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
 
     private String tag1 ;
     private String tag2 ;
