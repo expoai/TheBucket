@@ -25,8 +25,14 @@ public class UploadedImage {
 
     private Visibility visibility;
 
+    // TODO Optimisation
+    // Record not the URL but the UUID for the URL, Managing in the mapping the creation of the full URL in the returned DTO
+    // This would also make it so, if the URL need to be change, that we wont need to reformat the whole DB
     @Column(nullable = true)
     private String publicUrl;
+    // TODO delete this value and create it based on the UUID
+    @Column(name = "public_thumbnail_url", nullable = true)
+    private String publicThumbnailUrl;
 
     @Column(nullable = false)
     private String filename;

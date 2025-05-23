@@ -68,4 +68,10 @@ public class StudentUploadController {
         return ResponseEntity.ok(studentUploadService.findByTags(user, dto));
     }
 
+    @DeleteMapping("/purge")
+    public ResponseEntity<?> purge(
+            @AuthenticationPrincipal UserDetails user
+    ) throws Exception {
+        return ResponseEntity.ok(studentUploadService.purgeFiles(user) + " File(s) purged");
+    }
 }
