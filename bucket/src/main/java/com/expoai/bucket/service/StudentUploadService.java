@@ -57,7 +57,7 @@ public class StudentUploadService {
         StudentUpload.StudentUploadBuilder studentUploadBuilder = StudentUpload.builder() ;
 
         if(Boolean.TRUE.equals(upload.generateThumbnail())) {
-            MultipartFile thumbnailImage = thumbnailConverterService.generateThumbnail(upload.file(), changeExtension(file.getOriginalFilename(), "webp")) ;
+            MultipartFile thumbnailImage = thumbnailConverterService.generateThumbnail(upload.file(), changeExtension(file.getOriginalFilename(), "jpg")) ;
             String thumbnailSharedUrl = handleUpload(thumbnailImage, mediaCategory, true) ;
             studentUploadBuilder.thumbnailUrl(thumbnailSharedUrl) ;
         }
