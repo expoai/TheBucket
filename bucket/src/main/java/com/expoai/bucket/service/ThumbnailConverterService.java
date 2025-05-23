@@ -19,6 +19,8 @@ import java.io.IOException;
 @Service
 public class ThumbnailConverterService {
 
+    private static final String targetedFormat = "jpg" ;
+
     public MultipartFile generateThumbnail(MultipartFile file, String name) throws IOException {
         String contentType = file.getContentType();
 
@@ -32,7 +34,7 @@ public class ThumbnailConverterService {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
             Thumbnails.of(inputStream)
                     .size(200, 200) // Change size as needed
-                    .outputFormat("webp")
+                    .outputFormat(targetedFormat)
                     .toOutputStream(outputStream);
 
             try (ByteArrayInputStream resultInputStream = new ByteArrayInputStream(outputStream.toByteArray())) {
@@ -47,7 +49,7 @@ public class ThumbnailConverterService {
                 try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                     Thumbnails.of(bim)
                             .size(200, 200)
-                            .outputFormat("webp")
+                            .outputFormat(targetedFormat)
                             .toOutputStream(outputStream);
 
                     try (ByteArrayInputStream resultInputStream = new ByteArrayInputStream(outputStream.toByteArray())) {
@@ -60,14 +62,14 @@ public class ThumbnailConverterService {
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(thumbnail, "webp", outputStream);
+        ImageIO.write(thumbnail, targetedFormat, outputStream);
         byte[] imageBytes = outputStream.toByteArray();
 
         return ByteArrayMultipartFile
                 .builder()
                 .name(name)
                 .originalFilename(name)
-                .contentType("image/webp")
+                .contentType("image/" + targetedFormat)
                 .content(imageBytes)
                 .build() ;
     }
