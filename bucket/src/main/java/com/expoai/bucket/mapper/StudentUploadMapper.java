@@ -1,10 +1,8 @@
 package com.expoai.bucket.mapper;
 
-import com.expoai.bucket.dto.StudentUploadReadMetadataDTO;
+import com.expoai.bucket.dto.outward.StudentUploadReadMetadataDTO;
 import com.expoai.bucket.entity.StudentUpload;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class StudentUploadMapper {
@@ -20,9 +18,6 @@ public class StudentUploadMapper {
                 .tag3(upload.getTag3())
                 .build() ;
     }
-
-
-
 
 
 }

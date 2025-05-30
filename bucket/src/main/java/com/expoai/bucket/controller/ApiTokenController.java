@@ -1,6 +1,6 @@
 package com.expoai.bucket.controller;
 
-import com.expoai.bucket.dto.ApiTokenAttributionDTO;
+import com.expoai.bucket.dto.outward.ApiTokenAttributionDTO;
 import com.expoai.bucket.enums.TokenType;
 import com.expoai.bucket.service.ApiTokenService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,10 @@
 package com.expoai.bucket.service;
 
-import com.expoai.bucket.dto.*;
+import com.expoai.bucket.dto.inward.StudentPublicUploadFindDTO;
+import com.expoai.bucket.dto.inward.StudentUploadFindDTO;
+import com.expoai.bucket.dto.inward.StudentUploadWritingDTO;
+import com.expoai.bucket.dto.outward.StudentUploadFindMetadataDTO;
+import com.expoai.bucket.dto.outward.StudentUploadReadMetadataDTO;
 import com.expoai.bucket.entity.StudentUpload;
 import com.expoai.bucket.entity.User;
 import com.expoai.bucket.enums.MediaCategory;
@@ -10,7 +14,6 @@ import com.expoai.bucket.repository.UserRepository;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

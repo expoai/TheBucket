@@ -1,10 +1,7 @@
 package com.expoai.bucket.service;
 
-import com.expoai.bucket.dto.ApiTokenAttributionDTO;
-import com.expoai.bucket.dto.StudentGroupDTO;
-import com.expoai.bucket.entity.Role;
+import com.expoai.bucket.dto.outward.StudentGroupDTO;
 import com.expoai.bucket.entity.User;
-import com.expoai.bucket.enums.RoleEnum;
 import com.expoai.bucket.enums.TokenType;
 import com.expoai.bucket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

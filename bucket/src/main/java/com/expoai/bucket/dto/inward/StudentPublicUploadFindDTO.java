@@ -1,4 +1,4 @@
-package com.expoai.bucket.dto;
+package com.expoai.bucket.dto.inward;
 
 import lombok.Builder;
 
