@@ -1,9 +1,9 @@
 package com.expoai.bucket.controller;
 
-import com.expoai.bucket.dto.StudentUploadFindDTO;
-import com.expoai.bucket.dto.StudentUploadFindMetadataDTO;
-import com.expoai.bucket.dto.StudentUploadReadMetadataDTO;
-import com.expoai.bucket.dto.StudentUploadWritingDTO;
+import com.expoai.bucket.dto.inward.StudentUploadFindDTO;
+import com.expoai.bucket.dto.outward.StudentUploadFindMetadataDTO;
+import com.expoai.bucket.dto.outward.StudentUploadReadMetadataDTO;
+import com.expoai.bucket.dto.inward.StudentUploadWritingDTO;
 import com.expoai.bucket.service.StudentUploadService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
