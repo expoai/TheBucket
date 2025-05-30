@@ -1,5 +1,6 @@
 package com.expoai.bucket.controller;
 
+import com.expoai.bucket.dto.outward.ApiSavedImagePublicDTO;
 import com.expoai.bucket.enums.Visibility;
 import com.expoai.bucket.service.ImageUploadService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,14 @@ public class ApiImageController {
     private final ImageUploadService imageUploadService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(
+    public ResponseEntity<?> upload(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("visibility") Visibility visibility
+            @RequestParam("visibility") Visibility visibility,
+            @RequestParam("generateThumbnail") boolean generateThumbnail
     ) {
         try {
-            String publicUrl = imageUploadService.handleUpload(file, visibility);
+            ApiSavedImagePublicDTO publicUrl = imageUploadService.uploadImage(file, visibility, generateThumbnail);
+
             return ResponseEntity.ok(publicUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,7 +1,9 @@
 package com.expoai.bucket.service;
 
 import com.expoai.bucket.atools.ByteArrayMultipartFile;
+import com.expoai.bucket.atools.ExtensionComponent;
 import com.expoai.bucket.enums.MediaCategory;
+import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -17,11 +19,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Service
+@RequiredArgsConstructor
 public class ThumbnailConverterService {
 
     private static final String targetedFormat = "jpg" ;
+    private final ExtensionComponent extensionComponent ;
 
-    public MultipartFile generateThumbnail(MultipartFile file, String name) throws IOException {
+    public MultipartFile generateThumbnail(MultipartFile file) throws IOException {
         String contentType = file.getContentType();
 
         MediaCategory mediaCategory = MediaCategory.fromContentType(contentType)
@@ -67,12 +71,14 @@ public class ThumbnailConverterService {
 
         return ByteArrayMultipartFile
                 .builder()
-                .name(name)
-                .originalFilename(name)
+                .name(extensionComponent.changeExtension(file.getName(), "-thumb","jpg"))
+                .originalFilename(extensionComponent.changeExtension(file.getOriginalFilename(),"-thumb", "jpg"))
                 .contentType("image/" + targetedFormat)
                 .content(imageBytes)
                 .build() ;
     }
 
+
+    //changeExtension(file.getOriginalFilename(), "jpg")
 
 }
