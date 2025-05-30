@@ -57,7 +57,7 @@ public class StudentUploadService {
         StudentUpload.StudentUploadBuilder studentUploadBuilder = StudentUpload.builder() ;
 
         if(Boolean.TRUE.equals(upload.generateThumbnail())) {
-            MultipartFile thumbnailImage = thumbnailConverterService.generateThumbnail(upload.file(), changeExtension(file.getOriginalFilename(), "jpg")) ;
+            MultipartFile thumbnailImage = thumbnailConverterService.generateThumbnail(upload.file()) ;
             String thumbnailSharedUrl = handleUpload(thumbnailImage, mediaCategory, true) ;
             studentUploadBuilder.thumbnailUrl(thumbnailSharedUrl) ;
         }
@@ -148,7 +148,7 @@ public class StudentUploadService {
         return new StudentUploadFindMetadataDTO(metadataDTOS) ;
     }
 
-    public String handleUpload(MultipartFile file,MediaCategory mediaCategory, boolean forThumbnail) throws Exception {
+    public String handleUpload(MultipartFile file, MediaCategory mediaCategory, boolean forThumbnail) throws Exception {
 
         String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
         String objectName =
@@ -169,29 +169,6 @@ public class StudentUploadService {
 
         return cleanBase + objectName;
     }
-
-
-    public static String changeExtension(String filename, String newExtension) {
-        if (filename == null || newExtension == null) {
-            throw new IllegalArgumentException("Filename and extension must not be null");
-        }
-
-        // Ensure the new extension starts with a dot
-        if (!newExtension.startsWith(".")) {
-            newExtension = "." + newExtension;
-        }
-
-        int dotIndex = filename.lastIndexOf('.');
-        int sepIndex = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
-
-        // Dot must be after the last file separator to be considered an extension
-        if (dotIndex > sepIndex) {
-            return filename.substring(0, dotIndex) + newExtension;
-        } else {
-            return filename + newExtension;
-        }
-    }
-
 
 }
 /*

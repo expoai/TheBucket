@@ -17,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ApiToken {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String token;

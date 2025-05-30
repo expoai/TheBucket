@@ -27,8 +27,4 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
-    private LocalDateTime tokenExpiration;
-
-    private String claimToken;
-
 }

@@ -9,7 +9,7 @@ public class PasswordEncoderUtil {
     // this is the only way to create test user that works
     public static void main(String[] args) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String rawPassword = "bonjour";
+        String rawPassword = "password";
         String encodedPassword = encoder.encode(rawPassword);
         System.out.println(encodedPassword);
     }
