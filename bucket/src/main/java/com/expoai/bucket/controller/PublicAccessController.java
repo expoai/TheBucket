@@ -1,7 +1,6 @@
 package com.expoai.bucket.controller;
 
-import com.expoai.bucket.dto.StudentPublicUploadFindDTO;
-import com.expoai.bucket.dto.StudentUploadFindMetadataDTO;
+import com.expoai.bucket.dto.inward.StudentPublicUploadFindDTO;
 import com.expoai.bucket.service.StudentUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

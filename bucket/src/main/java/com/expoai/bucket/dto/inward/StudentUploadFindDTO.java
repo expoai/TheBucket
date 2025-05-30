@@ -1,4 +1,4 @@
-package com.expoai.bucket.dto;
+package com.expoai.bucket.dto.inward;
 
 public record StudentUploadFindDTO(
         String tag1,

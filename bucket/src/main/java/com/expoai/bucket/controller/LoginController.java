@@ -2,7 +2,7 @@ package com.expoai.bucket.controller;
 
 import com.expoai.bucket.config.JwtTokenProvider;
 import com.expoai.bucket.dto.AuthResponseDTO;
-import com.expoai.bucket.dto.LoginDTO;
+import com.expoai.bucket.dto.inward.LoginDTO;
 import com.expoai.bucket.entity.User;
 import com.expoai.bucket.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class LoginController {
