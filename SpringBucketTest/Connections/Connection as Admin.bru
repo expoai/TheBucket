@@ -1,0 +1,23 @@
+meta {
+  name: Connection as Admin
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{connectionPath}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "username": "{{adminUser}}",
+      "password" : "{{adminPassword}}"
+  }
+}
+
+tests {
+  var jsonData = res.getBody();
+  bru.setEnvVar("adminToken", jsonData.token);
+}

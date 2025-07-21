@@ -1,0 +1,11 @@
+meta {
+  name: Healt Check
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{connectionPath}}/actuator/health
+  body: none
+  auth: inherit
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Find By Tags PUBLIC
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{connectionPath}}/public/search
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "groupID" : 6
+  }
+}
+
+body:multipart-form {
+  tag1: test
+  tag2: 
+  tag3: 
+}

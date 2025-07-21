@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "The bucket",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

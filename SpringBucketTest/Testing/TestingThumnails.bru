@@ -1,0 +1,15 @@
+meta {
+  name: TestingThumnails
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{connectionPath}}/test/thumbnail
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(C:\Users\Simon\Pictures\bucket.jpg)
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Delete
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{connectionPath}}/student/upload/8vregfvregregreges
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{studentToken}}
+}
+
+body:multipart-form {
+  file: @file(C:\Users\Simon\Documents\billets.pdf)
+  idExterne: 3
+  tag1: test
+}

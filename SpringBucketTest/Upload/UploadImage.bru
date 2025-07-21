@@ -1,0 +1,20 @@
+meta {
+  name: UploadImage
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{connectionPath}}/api/upload
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiToken}}
+}
+
+body:multipart-form {
+  file: @file(C:\Users\Simon\Pictures\ExpoAI.png)
+  visibility: PUBLIC
+}

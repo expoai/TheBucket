@@ -1,0 +1,21 @@
+meta {
+  name: Purge
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{connectionPath}}/student/upload/purge
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{studentToken}}
+}
+
+body:multipart-form {
+  file: @file(C:\Users\Simon\Documents\billets.pdf)
+  idExterne: 3
+  tag1: test
+}

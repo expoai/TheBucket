@@ -1,0 +1,21 @@
+meta {
+  name: Find By ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{connectionPath}}/student/upload/FR3
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{studentToken}}
+}
+
+body:multipart-form {
+  file: @file(C:\Users\Simon\Documents\billets.pdf)
+  idExterne: 3
+  tag1: test
+}

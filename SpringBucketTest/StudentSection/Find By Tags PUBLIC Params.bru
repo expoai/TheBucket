@@ -1,0 +1,30 @@
+meta {
+  name: Find By Tags PUBLIC Params
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{connectionPath}}/public/search/6?tag2=saw2&tag1=Test&tag3
+  body: none
+  auth: none
+}
+
+params:query {
+  tag2: saw2
+  tag1: Test
+  tag3: 
+}
+
+body:json {
+  {
+    "groupID" : 4,
+    "tag2" : "saw"
+  }
+}
+
+body:multipart-form {
+  tag1: test
+  tag2: 
+  tag3: 
+}
