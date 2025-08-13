@@ -55,7 +55,7 @@ public class SetupBuckets {
                 }
               ]
             }
-            """.formatted(bucketName);
+            """ ;
 
                 minioClient.setBucketPolicy(SetBucketPolicyArgs.builder()
                         .bucket(bucketName)

@@ -78,7 +78,4 @@ public class ThumbnailConverterService {
                 .build() ;
     }
 
-
-    //changeExtension(file.getOriginalFilename(), "jpg")
-
 }
