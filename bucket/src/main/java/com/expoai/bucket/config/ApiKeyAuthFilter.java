@@ -45,7 +45,6 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                     .ifPresent(apiToken -> {
                         User user = apiToken.getUser();
                         String role = switch (apiToken.getType()) {
-                            case STUDENT -> "ROLE_STUDENT";
                             case API -> "ROLE_API";
                         };
 

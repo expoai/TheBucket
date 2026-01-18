@@ -23,7 +23,7 @@ public class ImageUploadService {
 
     private final MinioClient minioClient;
     private final UploadedImageRepository uploadedImageRepository;
-    private final ThumbnailConverterService thumbnailConverterService;
+    //private final ThumbnailConverterService thumbnailConverterService;
 
     @Value("${minio.public-bucket}")
     private String publicBucket;
@@ -34,7 +34,7 @@ public class ImageUploadService {
     @Value("${minio.public-base-url}")
     private String publicBaseUrl;
 
-    public ApiSavedImagePublicDTO uploadImage(MultipartFile file, Visibility visibility, boolean generateThumbnail) throws Exception {
+    public ApiSavedImagePublicDTO uploadImage(MultipartFile file, String name, Visibility visibility, boolean generateThumbnail) throws Exception {
         String contentType = file.getContentType();
 
         MediaCategory mediaCategory = MediaCategory.fromContentType(contentType)
@@ -48,13 +48,13 @@ public class ImageUploadService {
         String internalURL = handleUpload(file, targetBucket, objectName); ;
 
         UploadedImage image = new UploadedImage();
-        image.setFilename(file.getOriginalFilename());
+        image.setFilename(name != null ? name : file.getOriginalFilename());
         image.setCreatedAt(LocalDateTime.now());
         image.setVisibility(visibility);
         image.setPublicID(filePublicID);
 
         if (visibility == Visibility.PUBLIC) {
-            image.setPublicUrl(publicBaseUrl + internalURL);
+            image.setPublicUrl(publicBaseUrl + "/" + internalURL);
         }
 
         ApiSavedImagePublicDTO.ApiSavedImagePublicDTOBuilder savedImagePublicDTOBuilder = ApiSavedImagePublicDTO
@@ -65,13 +65,17 @@ public class ImageUploadService {
                         : "/media/" + filePublicID)
                 ;
 
+        // DEPRECATED Does not work on prod server
+        // GPU must have correct driver to manipulate image like this.
+        /*
         if(generateThumbnail) {
             String objectThumbnailName = mediaCategory.getPrefix() + "/thumbnail/" + filePublicID;
 
             MultipartFile thumbnailImage = thumbnailConverterService.generateThumbnail(file) ;
             String thumbnailSharedUrl = handleUpload(thumbnailImage, targetBucket , objectThumbnailName);
-            savedImagePublicDTOBuilder.thumbnailURL(publicBaseUrl + thumbnailSharedUrl) ;
+            savedImagePublicDTOBuilder.thumbnailURL(publicBaseUrl + "/" + thumbnailSharedUrl) ;
         }
+        */
 
         uploadedImageRepository.save(image);
 

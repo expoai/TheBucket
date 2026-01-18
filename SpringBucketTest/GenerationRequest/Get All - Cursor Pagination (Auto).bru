@@ -1,0 +1,49 @@
+meta {
+  name: Get All - Cursor Pagination (Auto)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{connectionPath}}/generation-request/cursor?size=10
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~cursor: {{nextCursor}}
+  size: 10
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  var jsonData = res.getBody();
+
+  if (jsonData.nextCursor) {
+    bru.setEnvVar("nextCursor", jsonData.nextCursor);
+  } else {
+    bru.setEnvVar("nextCursor", null);
+  }
+}
+
+docs {
+  ## Auto-Cursor Pagination
+
+  This request automatically saves and uses the `nextCursor` from the response.
+
+  **How it works:**
+  1. **First request**: Uncomment the cursor parameter, or leave it commented to start from beginning
+  2. **Automatic saving**: The `nextCursor` from the response is saved to the environment variable
+  3. **Next request**: Uncomment the cursor parameter to use the saved cursor
+  4. **Continue**: Keep running the request to walk through pages automatically
+
+  **To reset pagination:**
+  - Comment out the cursor parameter or delete the `nextCursor` environment variable
+
+  **Response tracking:**
+  - Check `hasMore` to see if more pages exist
+  - When `hasMore` is false, you've reached the end
+}

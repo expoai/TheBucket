@@ -1,0 +1,38 @@
+meta {
+  name: Get All - Cursor Pagination
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{connectionPath}}/generation-request/cursor?size=10
+  body: none
+  auth: bearer
+}
+
+params:query {
+  size: 10
+  ~cursor: 
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  ## Cursor Pagination Usage
+  
+  1. **First request**: Don't include cursor parameter (or set cursor to null)
+     - Returns first page with `nextCursor` value
+  
+  2. **Subsequent requests**: Use the `nextCursor` from previous response
+     - Example: `?cursor=10&size=10`
+  
+  3. **Response fields**:
+     - `data`: Array of generation requests
+     - `nextCursor`: ID to use for next page (null if no more data)
+     - `hasMore`: Boolean indicating if more pages exist
+     - `size`: Number of items in current page
+  
+  **Tip**: Uncomment the cursor parameter and paste the nextCursor value from the response to get the next page.
+}

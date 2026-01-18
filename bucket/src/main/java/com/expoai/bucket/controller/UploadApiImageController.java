@@ -1,5 +1,6 @@
 package com.expoai.bucket.controller;
 
+import com.expoai.bucket.annotation.LogExecutionTime;
 import com.expoai.bucket.dto.outward.ApiSavedImagePublicDTO;
 import com.expoai.bucket.enums.Visibility;
 import com.expoai.bucket.service.ImageUploadService;
@@ -17,13 +18,22 @@ public class UploadApiImageController {
     private final ImageUploadService imageUploadService;
 
     @PostMapping("/upload")
+    @LogExecutionTime
     public ResponseEntity<?> upload(
             @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "name", required = false) String name,
             @RequestParam("visibility") Visibility visibility,
-            @RequestParam("generateThumbnail") boolean generateThumbnail
+            @RequestParam(value = "generateThumbnail", defaultValue = "false") boolean generateThumbnail
     ) {
         try {
-            ApiSavedImagePublicDTO publicUrl = imageUploadService.uploadImage(file, visibility, generateThumbnail);
+
+            if(generateThumbnail) {
+                ResponseEntity
+                        .badRequest()
+                        .body("Generated Thumbnail is currently not supported");
+            }
+
+            ApiSavedImagePublicDTO publicUrl = imageUploadService.uploadImage(file, name, visibility, generateThumbnail);
 
             return ResponseEntity.ok(publicUrl);
         } catch (Exception e) {

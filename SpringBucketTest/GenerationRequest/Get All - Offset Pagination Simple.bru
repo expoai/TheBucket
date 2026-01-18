@@ -1,0 +1,22 @@
+meta {
+  name: Get All - Offset Pagination Simple
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{connectionPath}}/generation-request?page=0&size=10&sortBy=createdAt&direction=DESC
+  body: none
+  auth: bearer
+}
+
+params:query {
+  page: 0
+  size: 10
+  sortBy: createdAt
+  direction: DESC
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}

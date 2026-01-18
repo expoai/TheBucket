@@ -1,0 +1,79 @@
+meta {
+  name: Advanced Search
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{connectionPath}}/generation-request/search?descriptionKeyword=mountain&status=COMPLETED&page=0&size=10&sortBy=createdAt&direction=DESC
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~promptKeyword: sunset
+  descriptionKeyword: mountain
+  status: COMPLETED
+  ~userId: 1
+  ~createdAfter: 2024-01-01T00:00:00
+  ~createdBefore: 2025-12-31T23:59:59
+  page: 0
+  size: 10
+  sortBy: createdAt
+  direction: DESC
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  ## Advanced Multi-Criteria Search
+
+  This endpoint demonstrates advanced search capabilities with multiple criteria and partial matching.
+
+  ### Search Parameters (all optional):
+
+  **Text Search (Partial, Case-Insensitive)**:
+  - `promptKeyword` - Searches within the prompt field (e.g., "sunset" finds "Generate a sunset landscape")
+  - `descriptionKeyword` - Searches within the description field (e.g., "mountain" finds "...mountains...")
+
+  **Exact Match**:
+  - `status` - Filter by exact status (PENDING, PROCESSING, COMPLETED, FAILED)
+  - `userId` - Filter by specific user ID
+
+  **Date Range**:
+  - `createdAfter` - ISO 8601 format (e.g., 2024-01-01T00:00:00)
+  - `createdBefore` - ISO 8601 format (e.g., 2025-12-31T23:59:59)
+
+  **Pagination & Sorting**:
+  - `page` - Page number (default: 0)
+  - `size` - Items per page (default: 10)
+  - `sortBy` - Field to sort by (default: createdAt)
+  - `direction` - ASC or DESC (default: DESC)
+
+  ### Examples:
+
+  1. **Find all "dragon" requests**:
+     - Set `promptKeyword` = dragon
+     - Uncomment the parameter
+
+  2. **Find completed requests with "landscape" in description**:
+     - Set `descriptionKeyword` = landscape
+     - Set `status` = COMPLETED
+
+  3. **Find user 2's requests from last month**:
+     - Set `userId` = 2
+     - Set `createdAfter` = 2024-12-01T00:00:00
+     - Set `createdBefore` = 2024-12-31T23:59:59
+
+  4. **Combine multiple criteria**:
+     - All parameters are combined with AND logic
+     - Empty/null parameters are ignored
+
+  ### Technical Details:
+  - Uses JPA Specifications for dynamic query building
+  - Partial text search uses SQL LIKE with wildcards
+  - Case-insensitive text matching
+  - All criteria are optional and combinable
+}

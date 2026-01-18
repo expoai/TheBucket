@@ -25,7 +25,10 @@ public class ApiTokenController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
         }
 
-        ApiTokenAttributionDTO apiAttributionDTO = ApiTokenAttributionDTO.builder().token(apiTokenService.getApiToken(user.getUsername(), TokenType.API)).build()  ;
+        ApiTokenAttributionDTO apiAttributionDTO = ApiTokenAttributionDTO
+                .builder()
+                .token(apiTokenService.getApiToken(user.getUsername(), TokenType.API))
+                .build()  ;
 
         return ResponseEntity.ok(apiAttributionDTO);
     }

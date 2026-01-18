@@ -1,0 +1,29 @@
+meta {
+  name: Delete Request
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{connectionPath}}/generation-request/999
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  ## Delete Generation Request
+  
+  Deletes a generation request by ID.
+  
+  Replace the ID in the URL (currently `/999`) with the target request ID.
+  
+  **Note**: Using ID 999 as default to avoid accidentally deleting test data.
+  
+  Returns:
+  - 204 No Content if successful
+  - 404 Not Found if the request doesn't exist
+}

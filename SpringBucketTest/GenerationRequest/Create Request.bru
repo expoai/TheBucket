@@ -1,0 +1,23 @@
+meta {
+  name: Create Request
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{connectionPath}}/generation-request
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "prompt": "Generate a beautiful mountain landscape at sunset",
+    "description": "Create a scenic mountain vista with warm golden lighting and purple sky",
+    "userId": 1
+  }
+}

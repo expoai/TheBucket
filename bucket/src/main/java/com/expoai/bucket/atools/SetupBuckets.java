@@ -21,17 +21,10 @@ public class SetupBuckets {
     @Value("${minio.private-bucket}")
     private String privateBucket;
 
-    @Value("${minio.student-bucket:}")
-    private String studentBucket;
-
     @PostConstruct
     public void initBuckets() throws Exception {
         createIfMissing(publicBucket, true);
         createIfMissing(privateBucket, false);
-
-        if (!studentBucket.isBlank()) {
-            createIfMissing(studentBucket, true);
-        }
     }
 
     private void createIfMissing(String bucketName, boolean makePublic) throws Exception {

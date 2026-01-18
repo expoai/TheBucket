@@ -37,8 +37,6 @@ public class LoginController {
             Authentication authentication = authenticationManager.authenticate(authToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            System.out.println("My Work Is this");
-
             // Gather the infos on user
             String userName = loginDto.username();
             User user = userService.getUser(loginDto.username());

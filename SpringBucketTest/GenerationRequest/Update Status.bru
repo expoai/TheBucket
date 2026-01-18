@@ -1,0 +1,35 @@
+meta {
+  name: Update Status
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{connectionPath}}/generation-request/1/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "status": "PROCESSING"
+  }
+}
+
+docs {
+  ## Update Generation Request Status
+  
+  Updates the status of a generation request by ID.
+  
+  **Common status values:**
+  - PENDING
+  - PROCESSING
+  - COMPLETED
+  - FAILED
+  
+  Replace the ID in the URL (currently `/1/status`) with the target request ID.
+}
