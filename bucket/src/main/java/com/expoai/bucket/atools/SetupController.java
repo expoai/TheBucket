@@ -36,7 +36,7 @@ public class SetupController {
         admin.setUsername(request.username());
         admin.setPassword(passwordEncoder.encode(request.password()));
         Role role = new Role () ;
-        role.setId(1L);
+        role.setId(1);
         admin.setRoles(List.of(role));
 
         userRepo.save(admin);

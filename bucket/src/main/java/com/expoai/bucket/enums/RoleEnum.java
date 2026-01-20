@@ -9,9 +9,9 @@ public enum RoleEnum {
     SCRAPPER(3),
     ;
 
-    long id ;
+    int id ;
 
-    RoleEnum(long i) {
+    RoleEnum(int i) {
         id = i;
     }
 
