@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Notification Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .notification {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #006B8F;
+        }
+        #notifications {
+            margin-top: 30px;
+        }
+        .status {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>SSE Notification Demo</h1>
+
+<div class="status">
+    <strong>Connection Status:</strong> <span id="status">Disconnected</span>
+</div>
+
+<div>
+    <input type="text" id="taskInput" placeholder="Enter task description">
+    <button onclick="addTask()">Add Task</button>
+</div>
+
+<div id="notifications">
+    <h2>Notifications</h2>
+</div>
+
+<script>
+    const notificationsDiv = document.getElementById('notifications');
+    const statusSpan = document.getElementById('status');
+
+    // Connect to SSE stream
+    const eventSource = new EventSource('http://localhost:8081/notifications/stream');
+
+    eventSource.onopen = () => {
+        statusSpan.textContent = 'Connected';
+        statusSpan.style.color = 'green';
+    };
+
+    eventSource.addEventListener('task-added', (event) => {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = event.data;
+        notificationsDiv.appendChild(notification);
+
+        // Remove notification after 5 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    });
+
+    eventSource.onerror = (error) => {
+        statusSpan.textContent = 'Error/Disconnected';
+        statusSpan.style.color = 'red';
+    };
+
+    // Function to add a task
+    async function addTask() {
+        const description = document.getElementById('taskInput').value;
+
+        if (!description) {
+            alert('Please enter a task description');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8081/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ description: description })
+            });
+
+            if (response.ok) {
+                document.getElementById('taskInput').value = '';
+            }
+        } catch (error) {
+            console.error('Error adding task:', error);
+        }
+    }
+</script>
+</body>
+</html>

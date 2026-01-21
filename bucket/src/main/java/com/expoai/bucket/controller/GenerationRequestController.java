@@ -6,6 +6,7 @@ import com.expoai.bucket.dto.inward.GenerationRequestSearchDTO;
 import com.expoai.bucket.dto.outward.CursorPageDTO;
 import com.expoai.bucket.dto.outward.GenerationRequestDTO;
 import com.expoai.bucket.service.GenerationRequestService;
+import com.expoai.bucket.service.NotificationService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,14 @@ public class GenerationRequestController {
 
     private final GenerationRequestService generationRequestService;
 
+    private final NotificationService notificationService;
+
     @PostMapping
     @LogExecutionTime
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GenerationRequestDTO> createRequest(@Valid @RequestBody GenerationRequestCreateDTO dto) {
         GenerationRequestDTO created = generationRequestService.createRequest(dto);
+        notificationService.sendNotification("Notification done from Generation-request");
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 

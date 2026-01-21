@@ -1,0 +1,17 @@
+meta {
+  name: Add Task (SSE Demo)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{connectionPath}}/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "description": "Implémenter l'authentification utilisateur"
+  }
+}

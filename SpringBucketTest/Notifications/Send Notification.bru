@@ -1,0 +1,42 @@
+meta {
+  name: Send Notification
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{connectionPath}}/notifications/send?message=New task has been added to the queue!
+  body: none
+  auth: none
+}
+
+params:query {
+  message: New task has been added to the queue!
+}
+
+docs {
+  ## Send Notification to All Subscribers
+
+  Broadcasts a notification to all active SSE connections.
+
+  **Parameters:**
+  - `message` - The notification message to send (query parameter)
+
+  **Important Notes:**
+  - No authentication required (public endpoint)
+  - All active subscribers receive the notification immediately
+  - Dead/closed connections are automatically cleaned up
+  - Event name is always "task-added"
+
+  **Example messages:**
+  - "New task created: Implement feature X"
+  - "Task #123 completed successfully"
+  - "System maintenance in 5 minutes"
+  - "User John Doe joined the team"
+
+  **Testing Flow:**
+  1. Open "Subscribe to Stream" request and send it
+  2. Keep that connection open
+  3. Send this "Send Notification" request
+  4. See the notification appear in the stream response
+}

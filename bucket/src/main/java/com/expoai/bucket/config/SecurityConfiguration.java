@@ -77,10 +77,12 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints - must be first
+                        .requestMatchers("/setup/*", "/login", "/public/**", "/test/**", "/notifications/**", "/tasks").permitAll()
+                        // Protected endpoints
                         .requestMatchers("/admin/**", "/api-token").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/api/**").hasRole("API")
-                        .requestMatchers("/setup/*", "/login", "/public/**", "test/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class) // API keys first
@@ -88,6 +90,8 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+
 
 }
 

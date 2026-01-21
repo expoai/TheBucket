@@ -1,0 +1,38 @@
+meta {
+  name: Subscribe to Stream
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{connectionPath}}/notifications/stream
+  body: none
+  auth: none
+}
+
+docs {
+  ## Subscribe to SSE Notification Stream
+
+  This endpoint opens a Server-Sent Events (SSE) connection for real-time notifications.
+
+  **Important Notes:**
+  - This is a long-lived connection that stays open
+  - No authentication required (public endpoint)
+  - Events are sent with the name "task-added"
+  - Connection stays alive indefinitely (timeout: Long.MAX_VALUE)
+
+  **Usage in Browser:**
+  ```javascript
+  const eventSource = new EventSource('http://localhost:8081/notifications/stream');
+  
+  eventSource.addEventListener('task-added', (event) => {
+    console.log('Notification received:', event.data);
+  });
+  ```
+
+  **Testing:**
+  - Click "Send" to initiate the connection
+  - Keep the connection open
+  - Use the "Send Notification" request to trigger events
+  - You'll see events appear in the response stream
+}
